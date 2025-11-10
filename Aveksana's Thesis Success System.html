@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aveksana: The Thesis Success Platform</title>
+    <!-- Chosen Palette: Aveksana Brand Guide (Dark Teal: #003B3E, Medium Teal: #01949A, Seafoam: #49C3A3, Greys: #7A7A7A, #FAFAFA) -->
+    <!-- Application Structure Plan: The SPA uses a sticky top-navigation bar to scroll to dedicated, thematic sections: "Challenge," "Solution," "Features," "Trust," "Impact," and "Pilot." This structure is not linear like the deck but is user-driven, allowing a prospect to explore content based on their priority (e.g., jump straight to "Trust & Integration"). The core interaction is the "Features" section, which uses JavaScript-powered tabs to let the user toggle between "Student Portal" and "Supervisor Portal," reinforcing the dual-portal concept and organizing a large amount of information compactly. -->
+    <!-- Visualization & Content Choices:
+        - Shared Challenge: Goal: Inform/Empathize. Method: 3-column HTML/Tailwind cards for scannability.
+        - Unified Ecosystem: Goal: Organize. Method: Simple HTML/Tailwind "diagram" using Unicode arrows (⇄) to visually connect the two portals.
+        - Features: Goal: Inform/Organize. Method: Interactive JS tabs. Interaction: onClick events toggle visibility of feature lists. Justification: Far more engaging and less overwhelming than two long, static text blocks.
+        - Trust & Integration: Goal: Build Trust. Method: 2-column grid with checklists (✓) for security and integration points. Justification: Directly addresses key sales objections in a clear, scannable format.
+        - Verifiable Impact (ROI): Goal: Inform/Compare. Method: Chart.js Horizontal Bar Chart. Interaction: Hover tooltips. Justification: Visually demonstrates the key metrics (30%, 75%, 60%) for maximum impact, which is much stronger than text alone.
+        - Pilot (CTA): Goal: Call to Action. Method: Simple text block and a prominent button.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=MuseoModerno:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #FAFAFA;
+            color: #003B3E;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 48rem; /* max-w-xl */
+            margin-left: auto;
+            margin-right: auto;
+            height: 20rem; /* h-80 */
+            max-height: 20rem; /* max-h-80 */
+        }
+        @media (min-width: 640px) {
+            .chart-container {
+                height: 24rem; /* sm:h-96 */
+                max-height: 24rem; /* sm:max-h-96 */
+            }
+        }
+        
+        /* Navigation Styles */
+        .nav-link {
+            @apply px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-teal-100 hover:text-teal-800 transition-colors duration-200;
+        }
+        .nav-link.active {
+            @apply bg-teal-600 text-white hover:bg-teal-700 hover:text-white;
+        }
+
+        /* Tab Styles */
+        .tab-btn {
+            @apply px-6 py-3 font-semibold text-lg rounded-t-lg transition-colors duration-300 border-b-4 border-transparent;
+        }
+        .tab-btn.active-tab {
+            @apply border-blue-600 text-blue-600;
+        }
+        .tab-btn:not(.active-tab) {
+            @apply text-gray-500 hover:text-gray-800;
+        }
+
+        /* Colors */
+        .bg-brand-deep-blue { background-color: #003B3E; }
+        .bg-brand-light-gray { background-color: #FAFAFA; }
+        .text-brand-bright-blue { color: #01949A; }
+        .text-brand-deep-blue { color: #003B3E; }
+        .border-brand-bright-blue { border-color: #01949A; }
+        .bg-brand-accent { background-color: #49C3A3; }
+
+        /* Typography */
+        .font-heading {
+            font-family: 'MuseoModerno', sans-serif;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/95 backdrop-blur-sm shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <span class="text-2xl font-bold text-brand-deep-blue font-heading">Aveksana</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#challenge" class="nav-link active">The Challenge</a>
+                        <a href="#solution" class="nav-link">Our Solution</a>
+                        <a href="#features" class="nav-link">Features</a>
+                        <a href="#trust" class="nav-link">Trust & Integration</a>
+                        <a href="#impact" class="nav-link">The Impact</a>
+                        <a href="https://calendar.app.google/XU6pe9SEdw3groEf7" target="_blank" rel="noopener noreferrer" class="px-5 py-2 rounded-lg text-base font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-md hover:shadow-lg transition-all transform hover:scale-105 duration-300">Start a Pilot</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <!-- Mobile Menu Button (optional, simple wrap for now) -->
+                </div>
+            <div class="md:hidden py-2 flex flex-wrap justify-center items-center">
+                <a href="#challenge" class="nav-link active">Challenge</a>
+                <a href="#solution" class="nav-link">Solution</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#trust" class="nav-link">Trust</a>
+                <a href="#impact" class="nav-link">Impact</a>
+                <a href="https://calendar.app.google/XU6pe9SEdw3groEf7" target="_blank" rel="noopener noreferrer" class="m-1 px-5 py-2 rounded-lg text-base font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-md hover:shadow-lg transition-all transform hover:scale-105 duration-300">Start a Pilot</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+
+        <!-- Section 1: The Shared Challenge -->
+        <section id="challenge" class="py-20 bg-brand-light-gray">
+            <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">The Thesis Journey: A Shared Challenge</h2>
+                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                    As educators, administrators, and supervisors, we all share a common goal: to see our students succeed.
+                    Yet, the thesis process is often a point of friction. It's not a failure of a single person, but a <strong class="font-semibold text-brand-deep-blue">process challenge</strong>.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-teal-500">
+                        <h3 class="text-2xl font-semibold text-brand-deep-blue mb-3 font-heading">For Students</h3>
+                        <p class="text-gray-700 text-lg">Talented students feel lost and unmotivated, struggling to navigate a complex and often isolating process.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-seafoam-500" style="--tw-border-opacity: 1; border-color: rgb(73 195 163 / var(--tw-border-opacity));">
+                        <h3 class="text-2xl font-semibold text-brand-deep-blue mb-3 font-heading">For Supervisors</h3>
+                        <p class="text-gray-700 text-lg">Supervisors are overwhelmed with administrative tasks, leaving less time for high-impact academic mentorship.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-gray-400">
+                        <h3 class="text-2xl font-semibold text-brand-deep-blue mb-3 font-heading">For Universities</h3>
+                        <p class="text-gray-700 text-lg">Institutions face the high financial and reputational cost of non-completion, straining resources.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Our Solution -->
+        <section id="solution" class="py-20">
+            <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">Our Solution: A Unified Thesis Ecosystem</h2>
+                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                    Aveksana bridges the gap between students and supervisors in one intelligent, supportive platform. 
+                    It's not just a management tool. It's a <strong class="font-semibold text-brand-deep-blue">pedagogical partner</strong> designed to guide, support, and connect.
+                </p>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-10">
+                    <div class="text-center p-8 bg-white rounded-lg shadow-xl border-t-4 border-teal-500 w-full md:w-2/5">
+                        <span class="text-5xl" role="img" aria-label="Student">🎓</span>
+                        <h3 class="text-3xl font-bold text-brand-deep-blue mt-4 mb-2 font-heading">Student Portal</h3>
+                        <p class="text-lg text-gray-700">An AI-powered partner that guides them from the first idea to the final submission.</p>
+                    </div>
+
+                    <div class="text-6xl font-bold text-teal-500 transform md:rotate-0">
+                        ⇄
+                    </div>
+
+                    <div class="text-center p-8 bg-white rounded-lg shadow-xl border-t-4 border-teal-700 w-full md:w-2/5">
+                        <span class="text-5xl" role="img" aria-label="Supervisor">👩‍🏫</span>
+                        <h3 class="text-3xl font-bold text-brand-deep-blue mt-4 mb-2 font-heading">Supervisor Portal</h3>
+                        <p class="text-lg text-gray-700">A command center that transforms admin burdens into opportunities for high-impact mentorship.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Features (Interactive) -->
+        <section id="features" class="py-20 bg-brand-light-gray">
+            <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">A Platform Built for Both Sides of the Desk</h2>
+                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                    Explore the dedicated tools designed to foster clarity, motivation, and efficiency for everyone involved in the thesis process.
+                </p>
+
+                <!-- Tab Buttons -->
+                <!-- DELETED: <div class="flex justify-center border-b border-gray-300 mb-8"> ... </div> -->
+
+                <!-- Tab Content -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Student Content -->
+                    <div id="content-students" class="">
+                        <div class="bg-white p-6 rounded-lg shadow-lg h-full">
+                            <h3 class="text-2xl font-bold text-teal-600 mb-4 font-heading">Student Portal: Clarity & Motivation</h3>
+                            <p class="text-gray-700 mb-6 text-lg">Grounded in proven pedagogy like <strong class="font-semibold text-brand-deep-blue">formative assessment</strong> and <strong class="font-semibold text-brand-deep-blue">self-directed learning</strong> to provide a clear path forward.</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <span class="text-teal-500 font-bold text-xl mr-3">✓</span>
+                                    <p class="text-lg"><strong class="text-gray-900">AI-Powered Ideation:</strong> Find valid, unexplored research topics and refine your arguments.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-teal-500 font-bold text-xl mr-3">✓</span>
+                                    <p class="text-lg"><strong class="text-gray-900">Pedagogical Scaffolding:</strong> A structured workflow that guides students from start to finish, building skills and fostering independence.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-teal-500 font-bold text-xl mr-3">✓</span>
+                                    <p class="text-lg"><strong class="text-gray-900">Formative Feedback Tools:</strong> Make feedback loops efficient and foster self-directed learning.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-teal-500 font-bold text-xl mr-3">✓</span>
+                                    <p class="text-lg"><strong class="text-gray-900">Seamless Collaboration:</strong> One-click draft submission and in-platform communication.</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Supervisor Content -->
+                    <div id="content-supervisors" class="">
+                        <div class="bg-white p-6 rounded-lg shadow-lg h-full">
+                            <h3 class="text-2xl font-bold text-teal-700 mb-4 font-heading">Supervisor Portal: From Admin to Mentorship</h3>
+                            <p class="text-gray-700 mb-6 text-lg">We give supervisors their most valuable resource back: <strong class="font-semibold text-brand-deep-blue">time</strong>.</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <span class="text-teal-700 font-bold text-xl mr-3">✓</span>
+                                    <p class="text-lg"><strong class="text-gray-900">Holistic Dashboard:</strong> Track all student progress at a glance to see who is on track and who is stuck.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-teal-700 font-bold text-xl mr-3">✓</span>
+                                    <p class="text-lg"><strong class="text-gray-900">Proactive Intervention Alerts:</strong> Get notified about stalled or inactive students before they fall behind.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-teal-700 font-bold text-xl mr-3">✓</span>
+                                    <p class="text-lg"><strong class="text-gray-900">Automated Quality Checks:</strong> Use AI to check logic, structure, and plagiarism, saving you time for high-level feedback.</p>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-teal-700 font-bold text-xl mr-3">✓</span>
+                                    <p class="text-lg"><strong class="text-gray-900">Reduced Admin Load:</strong> Automated reminders and streamlined workflows cut down on repetitive emails.</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- NEW Features Card -->
+                    <div class="md:col-span-2 bg-brand-accent p-8 rounded-lg shadow-lg border-l-4 border-brand-deep-blue">
+                        <h3 class="text-3xl font-bold text-brand-deep-blue mb-4 font-heading">Upcoming Features: Beyond Tracking... Supporting Well-being</h3>
+                        <p class="text-lg text-gray-800 mb-6">We track more than just progress; we track motivation. This provides a crucial early-warning system for a human-centric approach.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-xl font-semibold text-gray-900 font-heading">Student Well-being Check-in</h4>
+                                <p class="text-gray-800 text-lg">Simple, regular check-ins allow students to flag when they're feeling overwhelmed, unmotivated, or lost.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold text-gray-900 font-heading">Proactive Motivational Alerts</h4>
+                                <p class="text-gray-800 text-lg">Supervisors see at a glance, "3 students reported low motivation," allowing them to intervene with support, not just a deadline.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Trust & Integration -->
+        <section id="trust" class="py-20">
+            <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center text-brand-deep-blue mb-6 font-heading">Built for Trust. Designed for Integration.</h2>
+                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                    We know security and integration are not optional. We've built our platform to be a secure, seamless part of your existing university ecosystem.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-seafoam-500" style="--tw-border-opacity: 1; border-color: rgb(73 195 163 / var(--tw-border-opacity));">
+                        <h3 class="text-3xl font-bold text-teal-600 mb-6 font-heading">Security & Compliance</h3>
+                        <p class="text-gray-700 mb-6 text-lg">We are built to be trusted by "information security Guardians."</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-lg"><span class="text-teal-500 text-2xl mr-3">✓</span> GDPR Compliant by Design</li>
+                            <li class="flex items-center text-lg"><span class="text-teal-500 text-2xl mr-3">✓</span> Secure EU Data Hosting</li>
+                            <li class="flex items-center text-lg"><span class="text-teal-500 text-2xl mr-3">✓</span> Data Encrypted at Rest & In Transit</li>
+                            <li class="flex items-center text-lg"><span class="text-teal-500 text-2xl mr-3">✓</span> Robust, Role-Based Access Control</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-t-4 border-gray-500">
+                        <h3 class="text-3xl font-bold text-gray-600 mb-6 font-heading">A Seamless Part of Your Ecosystem</h3>
+                        <p class="text-gray-700 mb-6 text-lg">Aveksana is not another data silo. It's a bridge that connects your systems.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-lg"><span class="text-gray-500 text-2xl mr-3">✓</span> Full API Integration (LMS, SIS, etc.)</li>
+                            <li class="flex items-center text-lg"><span class="text-gray-500 text-2xl mr-3">✓</span> Single Sign-On (SSO) Enabled</li>
+                            <li class="flex items-center text-lg"><span class="text-gray-500 text-2xl mr-3">✓</span> Streamline, Don't Replace</li>
+                            <li class="flex items-center text-lg"><span class="text-gray-500 text-2xl mr-3">✓</span> Enhances Your Current Infrastructure</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: The Impact (ROI) -->
+        <section id="impact" class="py-20 bg-brand-deep-blue text-white">
+            <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center mb-6 font-heading">From Input to Verifiable Impact</h2>
+                <p class="text-lg text-center text-gray-200 max-w-3xl mx-auto mb-12">
+                    Aveksana delivers quantifiable results that matter to students, faculty, and your bottom line. Here is what our pilot programs have shown.
+                </p>
+                <div class="bg-white rounded-lg shadow-2xl p-6 md:p-8">
+                    <div class="chart-container">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Pilot / CTA -->
+        <section id="pilot" class="py-24 text-center">
+            <div class="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-brand-deep-blue mb-6 font-heading">Let's Build This Together</h2>
+                <p class="text-lg text-gray-700 mb-10">
+                    We believe in a collaborative approach. We invite you to join a <strong class="font-semibold text-brand-deep-blue">no-risk pilot program</strong>
+                    to prove the value for your specific faculty, integrating with your systems and measuring the impact from day one.
+                </p>
+                <a href="https://calendar.app.google/XU6pe9SEdw3groEf7" target="_blank" rel="noopener noreferrer" class="inline-block bg-teal-600 text-white font-bold text-lg px-10 py-4 rounded-lg shadow-lg hover:bg-teal-700 transition-transform transform hover:scale-105 duration-300">
+                    Start a Pilot
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-brand-deep-blue text-gray-300 py-12">
+        <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-2xl font-semibold text-white mb-2 font-heading">Aveksana: Research That Matters</p>
+            <p class="text-lg">Surya Yadav | +358 46 937 5029 | surya.yadav@aveksana.com</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Navigation Active State on Scroll ---
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5 
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Smooth Scrolling for Nav Links ---
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // --- Feature Tab Logic ---
+            // DELETED: const btnStudents = document.getElementById('btn-students');
+            // DELETED: const btnSupervisors = document.getElementById('btn-supervisors');
+            // DELETED: const contentStudents = document.getElementById('content-students');
+            // DELETED: const contentSupervisors = document.getElementById('content-supervisors');
+            // DELETED: if (btnStudents) { ... }
+            // DELETED: if (btnSupervisors) { ... }
+
+            // --- Impact Chart.js ---
+            const impactCtx = document.getElementById('impactChart');
+            if (impactCtx) {
+                const impactChart = new Chart(impactCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            'Increase in On-Time Completion', 
+                            'Reduction in Supervisor Admin Load', 
+                            'Improvement in First-Submission Quality'
+                        ],
+                        datasets: [{
+                            label: 'Impact Percentage',
+                            data: [30, 75, 60],
+                            backgroundColor: [
+                                '#01949A',
+                                '#016367',
+                                '#49C3A3'
+                            ],
+                            borderRadius: 4,
+                            barThickness: 40
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    color: '#E8E8E8'
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 14,
+                                        weight: '700',
+                                        family: 'DM Sans'
+                                    },
+                                    color: '#003B3E',
+                                    callback: function(value) {
+                                        return value + '%'
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 14,
+                                        weight: '700',
+                                        family: 'DM Sans'
+                                    },
+                                    color: '#003B3E'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Quantifiable Program Impact',
+                                font: {
+                                    size: 24,
+                                    weight: '700',
+                                    family: 'MuseoModerno'
+                                },
+                                color: '#003B3E',
+                                padding: {
+                                    bottom: 20
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: '#003B3E',
+                                titleFont: {
+                                    size: 16,
+                                    weight: 'bold',
+                                    family: 'DM Sans'
+                                },
+                                bodyFont: {
+                                    size: 14,
+                                    family: 'DM Sans'
+                                },
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x + '%';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
